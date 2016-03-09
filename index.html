@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>基于Web的智能建筑BIM运维方案</title>
+    <script src="js/remark-latest.min.js" type="text/javascript"> </script>
+    <style type="text/css" media="screen">
+      @import url(//fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+        margin-top: 10px;
+      }
+      h1 { font-size: 3.5em; }
+      h2 { font-size: 3em; }
+      h3 { font-size: 1.6em; }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      pre {
+        border-left: 0.4em solid #d7d7d7;
+        padding: 1em !important;
+      }
+      code {
+        background: transparent !important;
+      }
+      a {
+        color: #F92672;
+        text-decoration: none;
+      }
+      .task {
+        float: right;
+        font-size: 0.9em;
+        padding-top: 0.6em;
+      }
+      .task a {
+        color: #080;
+        text-decoration: none;
+      }
+      .right {
+        float: right;
+        margin-left: 1em;
+      }
+      .right-img {
+        top: 0;
+        width: 50%
+      }
+      img{
+         max-height:500px; 
+         max-width:600px; 
+         width:expression(this.width > 600 && this.height < this.width ? 600: true); 
+         height:expression(this.height > 500 ? 500: true);
+         }
+      .pushdown {
+        margin-top: 12em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse
+
+# 基于WebGL的智能建筑BIM运维方案
+
+### 
+
+---
+
+# 杜长宇 (Daniel Du)
+
+.right.right-img[![杜长宇](img/duchangyu-bio.jpg)]
+
+
+- 在软件行业打拼十余年，对软件开发过程有深刻理解，尤其关注地理信息系统（GIS)、建筑信息模型(BIM)以及物联网技术（IoT）在云时代下的应用。
+
+- 曾在跨国大型软件公司（Autodesk)任职多年，长期从事技术咨询、培训和技术推广、布道。
+
+- 热心于研究业界新技术、新方法和新思想。
+
+电话微信 : 186 OO5O 376l
+
+Email : [changyudu@163.com](mailto:changyudu@163.com)
+
+
+
+???
+
+- 自我介绍
+- editorjs - online editor m/ oppgaver, kjøring og linting
+- Fokus kun på språk, ikke rammeverk / arkitektur
+
+---
+class: center, middle
+
+## ppt在线
+### [http://js-workshop.herokuapp.com](http://js-workshop.herokuapp.com)
+
+## ppt 下载
+### [http://gnab.github.com/js-workshop](http://gnab.github.com/js-workshop)
+
+
+---
+name: default
+layout: true
+task: &nbsp;
+
+.task[{{task}}]
+
+---
+class: center, middle, inverse
+
+# 背景
+
+???
+
+BIM时代的背景
+
+---
+template: default
+layout: true
+
+### 背景
+
+---
+
+
+# BIM (建筑信息模型）
+.right.right-img[![上海中心](img/shanghai-tower.jpg)]
+
+- 继“甩图板”以来的又一次技术革命
+    - 上海中心、鸟巢等标志性建筑的应用
+
+- 设计、施工、运维全生命周期
+
+- 众多利益相关方，需要统一模型方便交流，但又各有侧重
+    - 业主、建筑师、结构工程师、设备工程师、造价工程师、监理工程师、建材供应商、承建商、运维管理人员
+
+
+???
+
+提到建筑业，就必然要提到BIM（Building Information Modeling）即建筑信息模型。BIM技术经过近十年的发展，已经被越来越多的业主、开发商、设计者和运维人员所接受，建筑业必将迎来继“甩图板”以来的又一次技术革命。上海中心、鸟巢等标志性建筑的BIM技术应用，进一步证明了BIM技术的生命力。BIM技术将在设计、施工到运维整个生命周期中发挥巨大威力。
+
+---
+
+# 智能建筑运维的要求
+.right.right-img[![上海中心](img/zhineng-yunwei.jpg)]
+
+- 原始BIM模型基础上的概括与简化
+
+- 运维中必要信息的补充
+
+ 这个过程必然造成BIM模型的版本分化，有必要做好版本管理工作。
+
+???
+
+同时我们也注意到，设计、施工、运营维护人员和业主开发商等在同一个BIM模型上工作以达到自始至终的数据工作的“单一模型”模式在实践中是不切实际的，BIM模型在项目建造的不同阶段、基于不同目的、不同的参与者等因素，BIM模型的要包含和表达的信息以及详细程度也是不同的，有必要根据具体运用情况对BIM模型进行细化或概括，根据使用情况还可能需要对BIM模型进行轻量化处理，以便达到去粗取精、更易使用的目的。
+
+在建筑已经建造完成进入运维阶段时，我们的运维系统往往希望轻量化的BIM模型。首先是在原始BIM模型基础上的概括与简化，比如在设计阶段或施工阶段的某些具体信息在运维阶段并不一定有用，如果这些冗余信息在BIM运维阶段不做概括和简化，不但会造成BIM模型过于复杂导致性能问题，还可能由于信息冗杂、干扰，导致运维系统使用不便。所以有必要根据BIM模型的应用场景做必要的简化。与此同时，运维阶段所需要的一些必要信息，在设计和施工阶段也是没办法包含在BIM模型之内的，也需要根据具体使用情况，对BIM模型信息做必要的补充。这个过程必然造成BIM模型的版本分化，有必要做好版本管理工作。
+
+
+
+---
+
+
+
+# 智能建筑运维的要求
+.right.right-img[![上海中心](img/zhineng-yunwei.jpg)]
+
+运维人员的使用习惯和特点
+
+- 不熟悉建模软件的使用
+- 一般不配备高性能工作站
+- 和企业其他系统集成
+    - ERP, CRM, FM
+    - 安防、监控
+    - BAS-楼宇自动化系统
+    - 物联网(IoT)
+
+必然要求： 模型轻量化
+
+???
+
+- 根据运维系统的特点，运维人员可能并不熟悉建筑建模软件的使用，同时让运维人员使用建模软件来做运维管理也是不实际的，所以还需要对BIM模型的格式做必要的转换达到轻量化，以便在运维系统中使用。
+
+
+
+---
+layout: false
+class: center, middle, inverse
+
+# BIM模型的轻量化
+
+---
+template: default
+layout: true
+
+### BIM模型轻量化
+---
+
+# 可能的方案
+.right.right-img[![上海中心](img/yangshidasha.jpg)]
+
+- Autodesk Navisworks 软件
+
+- DWFx格式
+
+- Unity/Unreal 等游戏引擎
+
+- WebGL解决方案
+
+
+
+???
+
+
+
+---
+
+
+# Autodesk Navisworks
+
+.right.right-img[![navisworks](img/navisworks.jpg)]
+
+- 优点
+
+    - 可以接受包括Revit在内的多种业界常见的BIM模型格式
+
+    - 很高的压缩比
+
+    - 提供丰富的API，易于开发
+
+- 不足
+
+    - 桌面软件，客户端需要安装Navisworks软件
+
+    - 每个客户端需要授权，成本高
+
+    - 只能使用IE浏览器，最新版IE支持不好
+
+    - 不支持移动设备
+
+
+
+???
+
+使用Autodesk Navisworks 软件。 Autodesk Navisworks可以接受包括Revit在内的多种业界常见的BIM模型格式，同时具有很高的压缩比。Navisworks同时提供丰富的API，有不少厂商使用Navisworks做运维平台。其优点是支持数据格式众多，压缩比高，轻量化效果好同时提供丰富API，易于开发与集成。但是 Navisworks 是桌面软件，客户端需要安装Navisworks软件，需要License授权，成本较高。 使用Navisworks虽然可以开发基于Web的应用，但Navisworks只能支持IE浏览器，并且每个客户也还是需要安装Navisworks软件。同时由于IE浏览器版本的升级，新版本IE浏览器对Navisworks的支持还有问题。而且该方案也不支持移动设备浏览。
+
+
+---
+
+
+# DWF/DWFx - Design Review
+
+.right.right-img[![navisworks](img/navisworks.jpg)]
+
+- 优点 
+    - 通用数据格式，支持的软件众多
+
+    - 免费Web插件 有简单API
+
+- 不足
+
+    - 基于COM技术，只支持IE浏览器
+
+    - 对大模型支持能力一般，对计算机性能要求较高
+
+    - 不支持移动设备
+
+???
+
+
+DWF格式是更通用的数据格式，几乎所有Autodesk软件都支持导出为DWF格式。其优点是支持的格式众多，Autodesk Design Review还提供的免费的Web插件，可以在Web端运行，有简单API可以做定制和集成。不过Design Review或DWG viewer也是基于COM技术的，只能在IE浏览器上运行，这在互联网时代的大背景下，这简直是非常苛刻的要求。同时DWF viewer对超大模型的支持能力一般，打开超大模型时加载时间较长、对计算机性能要求高，运行性能也会有影响。不支持移动设备。
+
+---
+
+# Unity / Unreal等游戏引擎
+
+.right.right-img[![navisworks](img/navisworks.jpg)]
+
+- 优点 
+    - 显示效果好
+
+    - 有丰富API，开发资源多
+
+- 不足
+
+    - BIM数据导入过程繁琐
+
+    - 可能会有信息丢失
+
+???
+
+---
+
+# WebGL解决方案
+    
+- 优点 
+    - 支持常见浏览器
+        - Chrome， Firefox, IE 11
+    - 不需要安装任何插件
+    - 同时也支持移动设备
+        -Android , iOS
+![支持的浏览器](img/webgl-browser-support.png)
+- 不足
+    - 需要对BIM模型进行格式转换，技术水平要求较高
+        - 已有解决方案 - Autodesk View and Data API 等
+
+
+???
+
+随着最新Web技术的发展，尤其是HTML5/WebGL技术的发展与成熟，为我们在Web和移动端显示BIM模型提供了新的选择，这必将是将来的发展方向。HTML5/WebGL技术使用原生浏览器本身的功能，不需要下载安装任何插件即可在Web端浏览和显示复杂的三维BIM模型或二维DWG图纸。同时支持包括Firefox、Google Chrome等现代浏览器，iOS、Android设备上也可以运行。所以几乎所有浏览器、所有设备上都可以使用。使用WebGL技术做BIM模型的轻量化，需要把原始BIM模型进行解析，用WebGL技术在浏览器端或移动端对BIM模型进行重新绘制渲染，对技术水平要求较高。不过目前已有成熟解决方案，使这个过程得到的简化。
+
+
+---
+task: [#03 JavaScript pwns your scope](http://js-workshop.herokuapp.com/#2/3)
+
+# Autodesk View and Data API
+.right.right-img[![navisworks](img/vnd-building.png)]
+
+- HTML5/WebGL技术更契合技术发展方向
+
+- 支持格式众多，几乎涵盖业界所有三维数据格式。
+
+- 采用云技术，简化了模型转换工作难度
+
+- 转换后模型可以下载到本地，减少网络依赖
+
+- 转换后原始模型可删除
+
+- 提供丰富API，便于开发和集成
+
+???
+
+使用基于HTML/WebGL技术的BIM模型轻量化Web浏览技术更契合技术发展方向，Autodesk的View and Data API技术的推出，进一步降低了对BIM模型预处理难度，使得基于HTML/WebGL技术对BIM模型的Web浏览、分享以及协作更简单。Autodesk View and Data API技术支持包括Revit、Inventor、Navisworks、Catia、AutoCAD等软件的超过60多种数据格式，几乎涵盖业界所有三维数据格式。
+
+
+---
+
+# Autodesk View and Data API
+[![navisworks](img/vnd-overview.png)]
+
+???
+
+Autodesk View and Data API由两部分组成，对于BIM模型的预处理等技术复杂度高的工作以云服务的形式提供，用户可以以REST的方式调用；同时浏览器端提供基于JavaScript的API，方便对模型做更精细的控制以及和其他业务系统做深度集成。
+
+服务器端API部分以业界流行的REST方式提供，可以由任意语言或平台调用。通过REST API，我们实现基于OAuth 2.0的身份认证、模型文件的上传以及云端的格式转换。通过View and Data API提供的云服务，我们不用花费大量的时间和精力对不同格式的模型进行解析，只需利用云端服务的强大威力，从而降低我们系统开发过程中的技术难度。
+
+模型经云端进行格式转换后即可使用View and Data浏览器端API，使用JavaScript把模型嵌入到浏览器中并和其他系统做集成。该模型浏览器以及提供了内置的三维模型浏览查看功能，比如模型的缩放、旋转、视点跳转等，同时还提供模型目录结构树浏览、模型组件的隐藏与显示、模型组件的信息显示与搜索，而且内置的模型测量工具，可以对模型组件长度、角度、面积等多种参数进行量测，内置的剖面工具可以在任意平面上对模型进行剖切从而查看模型的内部结构。
+
+通过View and Data 客户端的JavaScript API，我们可以以编程的方式对模型浏览器进行控制、比如通过相机参数的控制来实现视点跳转和模型自动旋转，获取属性信息以便和其他系统集成，捕捉用户事件以及创建风格一致的用户界面等等。由于View and Data API基于Three.js构建，除了Autodesk View and Data API 客户端本身提供的API之外，结合HTML5技术、Three.js技术，我们可以做出更多酷炫的应用效果。
+
+
+
+---
+
+# Autodesk View and Data API
+
+![2d-3d](img/3d-2d.png)
+
+[在线演示](https://calm-inlet-4387.herokuapp.com/)
+
+---
+
+# Autodesk View and Data API
+
+<iframe id="iFrame2"
+  width='100%' height='400' frameborder='0' style="z-index:1"
+    allowFullScreen webkitallowfullscreen mozallowfullscreen
+    src='http://viewer.autodesk.io/node/gallery/embed?id=5476efc783bdd31804754db5&extIds=_Autodesk.ADN.Viewing.Extension.GithubDemo&viewerConfig=%27{%22viewerType%22:%22Viewer3D%22}%27'>
+</iframe>
+
+---
+
+.right.right-img[![three.js](img/threejs.jpeg)]
+# Three.js
+
+在HTML Canvas 里显示可交互的二维/三维图形的JavaScript框架
+
+- 最流行的WebGL框架
+- JavaScript, 简化了WebGL底层操作
+
+View and Data API 不具备的功能，可以通过调用底层three.js API来实现
+
+<iframe width="100%" height="100%" src="http://threejs.org/examples/#webgl_interactive_buffergeometry" >
+
+[three.js 参考资料](http://davidscottlyons.com/threejs/presentations/frontporch14/index.html#slide-0)
+
+---
+.right.right-img[![three.js](img/logo-babylonjs.svg)]
+
+# Babylon.js
+
+- 又一个WebGL的JavaScript框架
+- 来自微软
+- [Babylonjs官网](http://www.babylonjs.com/)
+
+<iframe width="100%" height="400" src="http://gleborgne.github.io/molvwr/#1GCN" />
+
+---
+layout: false
+class: center, middle, inverse
+
+# 应用案例
+
+---
+layout: true
+template: default
+
+### 应用案例
+---
+
+# 某大厦运维平台
+
+![达实大厦](img/dashidasha.png)
+
+???
+
+下面是View and Data API在某大厦运维系统中应用的实例，运维人员随时在基于Web的运维系统中查看设备的运行状态、维护工单等信息，并实现和三维模型的联动，一目了然。使用View and Data API技术在浏览器中查看复杂的三维模型，不需要安装任何客户端，只需要浏览器即可。
+
+---
+
+# 某大厦运维平台
+
+![达实大厦](img/dashidasha2.png)
+???
+
+下面是View and Data API在某大厦运维系统中应用的实例，运维人员随时在基于Web的运维系统中查看设备的运行状态、维护工单等信息，并实现和三维模型的联动，一目了然。使用View and Data API技术在浏览器中查看复杂的三维模型，不需要安装任何客户端，只需要浏览器即可。
+
+---
+
+# 某建筑的全生命周期管理系统
+
+![达实大厦](img/gongbuju.png)
+
+???
+
+此外还有某建筑的全生命周期管理系统，实现基于Web中三维BIM模型的建筑全生命周期管理，使用View and Data API, 在Web系统中显示复杂的三维BIM模型更简单方便。。
+
+---
+
+# 某建筑的全生命周期管理系统
+
+![达实大厦](img/gongbuju.png)
+
+???
+
+此外还有某建筑的全生命周期管理系统，实现基于Web中三维BIM模型的建筑全生命周期管理，使用View and Data API, 在Web系统中显示复杂的三维BIM模型更简单方便。。
+
+---
+
+# 与物联网（IoT）的结合
+
+![IoT](img/gongbuju.png)
+
+???
+
+与传感器、物联网技术结合
+
+---
+
+
+
+---
+layout: false
+class: center, middle, inverse
+
+# 参考资料
+
+---
+layout: true
+template: default
+
+### 参考资料
+---
+
+# 示例代码
+
+
+http://developer-autodesk.github.io
+
+![dev-portal](img/dev-portal.png)
+
+众多示例程序供您学习参考!
+
+---
+
+# 学习指南
+
+
+http://junqilian.cnblogs.com
+
+![dev-portal](img/junqilian-blog.png)
+
+我的中文博客
+
+---
+
+
+---
+layout: false
+class: center, middle, inverse
+
+# 保持联系
+
+---
+layout: true
+template: default
+
+### 保持联系
+---
+.right.right-img[![杜长宇](img/duchangyu-wechat.jpg)]
+# 杜长宇
+
+
+
+- 电话微信 : 186 OO5O 376l
+
+- Email : [changyudu@163.com](mailto:changyudu@163.com)
+
+- 请备注 : WebGL-BIM
+
+
+
+???
+
+欢迎加我的微信，一起讨论
+---
+
+
+layout: false
+class: center, middle, inverse
+
+# 谢谢!
+
+Slideshow created with [remark](http://gnab.github.com/remark).
+
+    </textarea>
+    <script>
+      var slideshow = remark.create({ highlightLanguage: 'javascript'});
+    </script>
+  </body>
+</html>
